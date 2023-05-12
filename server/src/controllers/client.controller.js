@@ -11,3 +11,13 @@ export const getClientInfo = async (req,res)=>{
     }
 };
 
+export const login = async (req, res) => {
+    const {username, password} = req.body;
+    var query = {}
+    try {
+        const response = await Client.find(query);
+    } catch (error) {
+    }
+    
+};
+
