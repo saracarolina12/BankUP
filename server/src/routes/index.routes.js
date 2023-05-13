@@ -8,7 +8,7 @@ router.get("/", (req, res) =>{
     res.send("Obteniendo datos desde la API!")
 });
 
-router.get("/client/:account_number", getClientInfo);
+router.post("/client", getClientInfo);
 
 router.post("/client/login", login);
 

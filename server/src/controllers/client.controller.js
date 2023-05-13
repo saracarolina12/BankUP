@@ -1,7 +1,9 @@
 import Client from '../models/Client.js'
 
 export const getClientInfo = async (req,res)=>{
-    const {account_number} = req.params; 
+    //test -: curl -X POST -H "Content-Type: application/json" -d "{\"account_number\":\"123\"}" http://localhost:3000/api/client
+    //test +: curl -X POST -H "Content-Type: application/json" -d "{\"account_number\":\"4152831396612259\"}" http://localhost:3000/api/client
+    const {account_number} = req.body; 
     var query = { account_number: account_number}
     try {
         const data = await Client.find(query);
