@@ -7,17 +7,20 @@ export const getClientInfo = async (req,res)=>{
         const data = await Client.find(query);
         res.json(data);
     } catch (error) {
-        res.json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
 export const login = async (req, res) => {
+    //test: curl -X POST -d "username=value1&password=value2" http://localhost:3000/api/client/login
     const {username, password} = req.body;
-    var query = {}
+    var query = {username: username, password: password}
     try {
-        const response = await Client.find(query);
+        const response = await Client.findOne(query);
+        if(!response) return res.status(401).send('Invalid username or password');
+        else res.send('Login successful');
     } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    
 };
 
