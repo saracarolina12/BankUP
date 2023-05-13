@@ -12,7 +12,8 @@ export const getClientInfo = async (req,res)=>{
 };
 
 export const login = async (req, res) => {
-    //test: curl -X POST -d "username=value1&password=value2" http://localhost:3000/api/client/login
+    //test -: curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"UliseGallardo\",\"password\":\"password123\"}" http://localhost:3000/api/client/login
+    //test +: curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"UlisesGallardo\",\"password\":\"password123\"}" http://localhost:3000/api/client/login
     const {username, password} = req.body;
     var query = {username: username, password: password}
     try {
