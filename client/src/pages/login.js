@@ -1,26 +1,34 @@
 import './login.css';
 import loginImg from '../assets/imgs/login.webp'
-import { Navigate } from "react-router-dom";
-import React, {useState} from 'react'
+//import { navigate } from "react-router-dom";
+import React, {useState, useEffect} from 'react'
+import axios from 'axios';
 
 
 function Login() {
     const [name, setName] = useState("");
     const [passw, setPassw] = useState("");
 
-    const checkLogin = () =>{
-        if(!name && !passw){
-            alert("Fill the blanks")
-        }else{
-            if(name == 'admin'){
-                if(passw == '123login'){
-                    <Navigate to="/dashboard" replace={true} />
-                }else{
-                    alert("wrong password");
+    const checkLogin = (event) =>{
+        event.preventDefault();
+        if(!name || !passw){
+            alert("Fill the blanks")  //TODO: Sweet alert
+        }
+        else {
+            const postData = {username: name, password: passw};
+
+            axios.post('http://localhost:3000/api/client/login', postData)
+            .then(response => {
+                console.log("Login Successful");
+                //navigate('/dashboard');
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    console.log('Unauthorized access');
                 }
-            }else{
-                alert("This name does not exist. Please try again.")
-            }
+                else console.error(error);
+            });
+
         }
     }
     const nameChange = (event) => {
@@ -28,7 +36,6 @@ function Login() {
     }
 
     const passwChange = (event) => {
-        console.log(event.target.value);
         setPassw(event.target.value);
     }
     
