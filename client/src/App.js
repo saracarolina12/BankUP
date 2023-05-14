@@ -15,14 +15,6 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Login />} />
-      </Routes>
-    </Router>
-  );
-
-  return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/details" element={<Details />} />
       </Routes>

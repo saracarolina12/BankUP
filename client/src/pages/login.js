@@ -1,7 +1,6 @@
 import './login.css';
 import loginImg from '../assets/imgs/login.webp'
-//import { navigate } from "react-router-dom";
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import axios from 'axios';
 
 
