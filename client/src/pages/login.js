@@ -2,30 +2,48 @@ import './login.css';
 import loginImg from '../assets/imgs/login.webp'
 import React, {useState} from 'react'
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
-function Login() {
+function Login({navigation}) {
+    const navigate = useNavigate();
     const [name, setName] = useState("");
     const [passw, setPassw] = useState("");
 
     const checkLogin = (event) =>{
         event.preventDefault();
         if(!name || !passw){
-            alert("Fill the blanks")  //TODO: Sweet alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill the blanks!',
+              })
         }
         else {
             const postData = {username: name, password: passw};
 
             axios.post('http://localhost:3000/api/client/login', postData)
             .then(response => {
-                console.log("Login Successful");
-                //navigate('/dashboard');
+                navigate('/dashboard');
             })
             .catch(error => {
                 if (error.response.status === 401) {
-                    console.log('Unauthorized access');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Wrong credentials!',
+                      })
                 }
-                else console.error(error);
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                      })
+                    console.error(error);
+
+                } 
             });
 
         }
