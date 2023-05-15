@@ -21,8 +21,25 @@ function Login({navigation}) {
               })
         }
         else {
-            const postData = {username: name, password: passw};
+            const regex = /[^a-z0-9]/i;
+            if(name.match(regex)){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Username can only have alphanumeric characters.',
+                });
+                return;
+            }
+            if(passw.length < 5){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password must have at least 5 characters.',
+                });
+                return;    
+            }
 
+            const postData = {username: name, password: passw};
             axios.post('http://localhost:3000/api/client/login', postData)
             .then(response => {
                 navigate('/dashboard');
