@@ -1,26 +1,68 @@
 import './login.css';
 import loginImg from '../assets/imgs/login.webp'
-import { Navigate } from "react-router-dom";
 import React, {useState} from 'react'
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
-function Login() {
+function Login({navigation}) {
+    const navigate = useNavigate();
     const [name, setName] = useState("");
     const [passw, setPassw] = useState("");
 
-    const checkLogin = () =>{
-        if(!name && !passw){
-            alert("Fill the blanks")
-        }else{
-            if(name == 'admin'){
-                if(passw == '123login'){
-                    <Navigate to="/dashboard" replace={true} />
-                }else{
-                    alert("wrong password");
-                }
-            }else{
-                alert("This name does not exist. Please try again.")
+    const checkLogin = (event) =>{
+        event.preventDefault();
+        if(!name || !passw){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill the blanks!',
+              })
+        }
+        else {
+            const regex = /[^a-z0-9]/i;
+            if(name.match(regex)){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Username can only have alphanumeric characters.',
+                });
+                return;
             }
+            if(passw.length < 5){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password must have at least 5 characters.',
+                });
+                return;    
+            }
+
+            const postData = {username: name, password: passw};
+            axios.post('http://localhost:3000/api/client/login', postData)
+            .then(response => {
+                navigate('/dashboard');
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Wrong credentials!',
+                      })
+                }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                      })
+                    console.error(error);
+
+                } 
+            });
+
         }
     }
     const nameChange = (event) => {
@@ -28,7 +70,6 @@ function Login() {
     }
 
     const passwChange = (event) => {
-        console.log(event.target.value);
         setPassw(event.target.value);
     }
     
