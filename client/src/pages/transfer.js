@@ -12,7 +12,9 @@ function TransferScreen() {
   const [clientAccount, setClientAccount] = useState('');
 
   const getClientInfo = (event) => {
-    const clientAccountNumber = '4152831396612259';
+    //const clientAccountNumber = '4152831396612259';
+    const clientAccountNumber = localStorage.getItem('accountNumber');
+    alert(clientAccountNumber);
     const postData = {account_number:clientAccountNumber};
     axios.post('http://localhost:3000/api/client', postData)
     .then(response => {
@@ -131,7 +133,7 @@ function TransferScreen() {
             <div className='centered'>
                 <h1 className='h1'>Transfer</h1>
                 <label id="clientAccount">
-                    12314654879987: $1567
+                    None: None
                     </label>
                 <form onSubmit={validateTransfer}>
                     <label>
