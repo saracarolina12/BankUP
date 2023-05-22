@@ -21,7 +21,7 @@ export const login = async (req, res) => {
     try {
         const response = await Client.findOne(query);
         if(!response) return res.status(401).send('Invalid username or password');
-        else res.send('Login successful');
+        else res.send(response.account_number);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
