@@ -7,7 +7,7 @@ import { BrowserRouter as Router,
           Route,
           Link, Routes } from "react-router-dom";
 import Details from './pages/details';
-
+import TransferScreen from './pages/transfer';
 
 function App() {
 
@@ -17,6 +17,7 @@ function App() {
         <Route exact path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/details" element={<Details />} />
+        <Route path="/transfer" element={<TransferScreen />} />
       </Routes>
     </Router>
   );
