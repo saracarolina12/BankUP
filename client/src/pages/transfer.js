@@ -9,6 +9,27 @@ function TransferScreen() {
   const navigate = useNavigate();
   const [amount, setAmount] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
+  const [clientAccount, setClientAccount] = useState('');
+
+  const getClientInfo = (event) => {
+    const clientAccountNumber = '4152831396612259';
+    const postData = {account_number:clientAccountNumber};
+    axios.post('http://localhost:3000/api/client', postData)
+    .then(response => {
+      const clientJSON = JSON.stringify(response.data[0]);
+      const info = JSON.parse(clientJSON);
+      setClientAccount(info.account_number);
+      document.getElementById("clientAccount").innerHTML = info.account_number + ": $" + info.account_balance;
+    })
+    .catch(error => {
+      Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error,
+        })
+      console.error(error);
+    });
+  };
 
   const AmountChange = (event) => {
     setAmount(event.target.value);
@@ -29,18 +50,26 @@ function TransferScreen() {
           })
     }
     else {
-        const parsedAmount = parseInt(amount, 10);
+      if (clientAccount == accountNumber){
+        Swal.fire({
+          icon: 'error',
+          title: 'Enter a different account number!',
+          text: 'You can\'t send money to yourself.',
+        })
+      }
+      else{
+        const parsedAmount = parseFloat(amount);
         if (parsedAmount < 100 || parsedAmount > 7000) {
             Swal.fire({
                 icon: 'error',
                 title: 'Amount out of limits!',
                 text: 'You can only transfer between $100 and $7000.',
               })
-        }
-        else{
-            const postData = {to_account_number:accountNumber, amount:amount};
-            axios.post('http://localhost:3000/api/transfer', postData)
-            .then(response => {
+            }
+            else{
+              const postData = {client_account:clientAccount, to_account_number:accountNumber, amount:amount};
+              axios.post('http://localhost:3000/api/transfer', postData)
+              .then(response => {
               Swal.fire({
                   title: 'Confirm transfer?',
                   text: "You won't be able to revert this!",
@@ -69,21 +98,29 @@ function TransferScreen() {
                         title: 'Invalid account number!',
                       })
                 }
+                else if (error.response.status === 402) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Insuficient funds!',
+                      })
+                }
                 else{
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: error,
                       })
                     console.error(error);
                 } 
             });
         }
+      }
     }
   };
 
   return (
     <>
+    <div onLoad={getClientInfo}>
         <div className='split left'>
             <div className='centered'>
                 <img style={{width:'100%'}} src={transferIcon} />
@@ -93,7 +130,7 @@ function TransferScreen() {
         <div className='split right form'>
             <div className='centered'>
                 <h1 className='h1'>Transfer</h1>
-                <label>
+                <label id="clientAccount">
                     12314654879987: $1567
                     </label>
                 <form onSubmit={validateTransfer}>
@@ -111,6 +148,7 @@ function TransferScreen() {
                 </form>
             </div>
         </div>
+    </div>
     </>
   );
 }
