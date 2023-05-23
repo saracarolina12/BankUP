@@ -12,9 +12,7 @@ function TransferScreen() {
   const [clientAccount, setClientAccount] = useState('');
 
   const getClientInfo = (event) => {
-    //const clientAccountNumber = '4152831396612259';
     const clientAccountNumber = localStorage.getItem('accountNumber');
-    alert(clientAccountNumber);
     const postData = {account_number:clientAccountNumber};
     axios.post('http://localhost:3000/api/client', postData)
     .then(response => {
@@ -67,54 +65,55 @@ function TransferScreen() {
                 title: 'Amount out of limits!',
                 text: 'You can only transfer between $100 and $7000.',
               })
-            }
-            else{
-              const postData = {client_account:clientAccount, to_account_number:accountNumber, amount:amount};
-              axios.post('http://localhost:3000/api/transfer', postData)
-              .then(response => {
-              Swal.fire({
-                  title: 'Confirm transfer?',
-                  text: "You won't be able to revert this!",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes'
+        }
+        else{ 
+                const postData = {client_account:clientAccount, to_account_number:accountNumber, amount:amount};
+
+                Swal.fire({
+                    title: 'Confirm transfer?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
                 }).then((result) => {
-                  if (result.isConfirmed) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Successful transfer!',
-                      text: `Transfer of \$${amount} successfully made to the account ${accountNumber}.`,
-                    })
-                    navigate('/dashboard');
-                    setAmount('');
-                    setAccountNumber('');
-                  }
+                    if (result.isConfirmed) {
+                        axios.post('http://localhost:3000/api/transfer', postData)
+                        .then(response => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Successful transfer!',
+                                text: `Transfer of \$${amount} successfully made to the account ${accountNumber}.`,
+                            })
+                            navigate('/dashboard');
+                            setAmount('');
+                            setAccountNumber('');
+                        })
+                        .catch(error => {      
+                          if (error.response.status === 401) {
+                              Swal.fire({
+                                  icon: 'error',
+                                  title: 'Invalid account number!',
+                                })
+                          }
+                          else if (error.response.status === 402) {
+                              Swal.fire({
+                                  icon: 'error',
+                                  title: 'Insuficient funds!',
+                                })
+                          }
+                          else{
+                              Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: error,
+                                })
+                              console.error(error);
+                          } 
+                        });
+                    }
                 })
-            })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid account number!',
-                      })
-                }
-                else if (error.response.status === 402) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Insuficient funds!',
-                      })
-                }
-                else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: error,
-                      })
-                    console.error(error);
-                } 
-            });
         }
       }
     }
