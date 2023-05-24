@@ -40,7 +40,7 @@ function Login({navigation}) {
             }
 
             const postData = {username: name, password: passw};
-            axios.post('http://localhost:3000/api/client/login', postData)
+            axios.post('http://localhost:5000/api/client/login', postData)
             .then(response => {
                 localStorage.setItem('accountNumber', response.data);
                 navigate('/dashboard');

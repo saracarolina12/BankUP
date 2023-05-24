@@ -27,7 +27,7 @@ function Dashboard() {
 
     const getClientInfo = () => { 
         const postData = {account_number:clientAccountNumber};
-        axios.post('http://localhost:3000/api/client', postData)
+        axios.post('http://localhost:5000/api/client', postData)
         .then(response => {
           const clientJSON = JSON.stringify(response.data[0]);
           const info = JSON.parse(clientJSON);
@@ -57,7 +57,7 @@ function Dashboard() {
 
     const getTransactions = () => {
         const postData = {client_account:clientAccountNumber};
-        axios.post('http://localhost:3000/api/transactions', postData)
+        axios.post('http://localhost:5000/api/transactions', postData)
         .then(response => {
           const transactionsJSON = JSON.stringify(response.data);
           const info = JSON.parse(transactionsJSON);
