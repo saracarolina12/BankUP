@@ -41,8 +41,15 @@ export const transfer = async (req, res) => {
 
 export const getAccountTransactions = async (req,res) =>{
     const {client_account} = req.body;
-    console.log(client_account)
-    var query = { From_account_number: client_account}
+    //console.log(client_account)
+    //var query = { From_account_number: client_account}
+    var query = {
+      $or: [
+          { From_account_number: client_account },
+          { To_account_number: client_account }
+      ]
+  };
+
     try {
         const data = await Transaction.find(query);
         res.json(data);

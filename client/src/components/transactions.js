@@ -30,18 +30,18 @@ function Transactions({bank, account, date, descr, status, type, cant}) {
     return (
         <>
             <button className='container' onClick={goTo}>
-                <div class="Row">
-                    <div class="Column"><p className='number'>{date}</p></div>
-                    <div class="Column"><p>{descr}</p></div>
-                    <div class="Column">
+                <div className="Row">
+                    <div className="Column"><p className='number'>{date}</p></div>
+                    <div className="Column"><p>{descr}</p></div>
+                    <div className="Column" >
                             {status == "done" && (
-                                <AiFillCheckCircle style={{color:'green'}}/>
+                                <AiFillCheckCircle size = {20} style={{color:'green'}}/>
                             )}
                             {status == "pending" && (
                                 <MdPendingActions style={{color:'#DFC91D'}}/>
                             )}
                     </div>
-                    <div class="Column">
+                    <div className="Column">
                         {type == '-' ? <p className='cant' style={{color:'#b11717'}}>{type}${cant}</p>
                             :
                             <p className='cant' style={{color:'green'}}>{type}${cant}</p>
