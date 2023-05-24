@@ -19,7 +19,7 @@ function TransferScreen() {
       const clientJSON = JSON.stringify(response.data[0]);
       const info = JSON.parse(clientJSON);
       setClientAccount(info.account_number);
-      document.getElementById("clientAccount").innerHTML = info.account_number + ": $" + info.account_balance;
+      document.getElementById("clientAccount").innerHTML = info.account_number + " $" + info.account_balance;
     })
     .catch(error => {
       Swal.fire({
@@ -130,22 +130,20 @@ function TransferScreen() {
         
         <div className='split right form'>
             <div className='centered'>
-                <h1 className='h1'>Transfer</h1>
-                <label id="clientAccount">
+                <h1 className='title1'>Wire Transfer</h1>
+                <label id="clientAccount" className='lbl'>
                     None: None
-                    </label>
+                </label>
                 <form onSubmit={validateTransfer}>
                     <label>
-                        Account number:
-                        <input type="number" value={accountNumber} onChange={AccountNumberChange} />
+                        <input placeholder = 'Account Number' type="number" value={accountNumber} onChange={AccountNumberChange} className='input'/>
                     </label>
                     <br />
                     <label>
-                        Amount:
-                        <input type="number" value={amount} onChange={AmountChange} />
+                        <input placeholder='Amount' type="number" value={amount} onChange={AmountChange} className='input'/>
                     </label>
                     <br />
-                    <button type="submit">Confirm</button>
+                    <button type="submit" className='button'>Confirm</button>
                 </form>
             </div>
         </div>
