@@ -14,7 +14,7 @@ function TransferScreen() {
   const getClientInfo = (event) => {
     const clientAccountNumber = localStorage.getItem('accountNumber');
     const postData = {account_number:clientAccountNumber};
-    axios.post('http://localhost:3000/api/client', postData)
+    axios.post('http://localhost:5000/api/client', postData)
     .then(response => {
       const clientJSON = JSON.stringify(response.data[0]);
       const info = JSON.parse(clientJSON);
@@ -22,12 +22,12 @@ function TransferScreen() {
       document.getElementById("clientAccount").innerHTML = info.account_number + " $" + info.account_balance;
     })
     .catch(error => {
+      console.error(`[${new Date()}] - ${error}`);
       Swal.fire({
           icon: 'error',
           title: 'Oops...',
           text: error,
         })
-      console.error(error);
     });
   };
 
@@ -43,14 +43,16 @@ function TransferScreen() {
     event.preventDefault();
 
     if (!amount || !accountNumber) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Please fill the blanks!',
-          })
+      console.info(`[${new Date()}] - An input was left blank`);
+      Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please fill the blanks!',
+        })
     }
     else {
       if (clientAccount == accountNumber){
+        console.info(`[${new Date()}] - Tried to send money to the same account`);
         Swal.fire({
           icon: 'error',
           title: 'Enter a different account number!',
@@ -60,60 +62,72 @@ function TransferScreen() {
       else{
         const parsedAmount = parseFloat(amount);
         if (parsedAmount < 100 || parsedAmount > 7000) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Amount out of limits!',
-                text: 'You can only transfer between $100 and $7000.',
-              })
+          console.info(`[${new Date()}] - Tried to send money out of the established limits`);
+          Swal.fire({
+              icon: 'error',
+              title: 'Amount out of limits!',
+              text: 'You can only transfer between $100 and $7000.',
+            })
         }
         else{ 
-                const postData = {client_account:clientAccount, to_account_number:accountNumber, amount:amount};
+          const postData = {client_account:clientAccount, to_account_number:accountNumber, amount:amount};
 
-                Swal.fire({
-                    title: 'Confirm transfer?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        axios.post('http://localhost:3000/api/transfer', postData)
-                        .then(response => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Successful transfer!',
-                                text: `Transfer of \$${amount} successfully made to the account ${accountNumber}.`,
-                            })
-                            navigate('/dashboard');
-                            setAmount('');
-                            setAccountNumber('');
-                        })
-                        .catch(error => {      
-                          if (error.response.status === 401) {
-                              Swal.fire({
-                                  icon: 'error',
-                                  title: 'Invalid account number!',
-                                })
-                          }
-                          else if (error.response.status === 402) {
-                              Swal.fire({
-                                  icon: 'error',
-                                  title: 'Insuficient funds!',
-                                })
-                          }
-                          else{
-                              Swal.fire({
-                                  icon: 'error',
-                                  title: 'Oops...',
-                                  text: error,
-                                })
-                              console.error(error);
-                          } 
-                        });
+          Swal.fire({
+              title: 'Confirm transfer?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  axios.post('http://localhost:5000/api/transfer', postData)
+                  .then(response => {
+                    console.info(`[${new Date()}] - Successful transfer`);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Successful transfer!',
+                        text: `Transfer of \$${amount} successfully made to the account ${accountNumber}.`,
+                    })
+                    navigate('/dashboard');
+                    setAmount('');
+                    setAccountNumber('');
+                  })
+                  .catch(error => {      
+                    if (error.response.status === 401) {
+                      console.info(`[${new Date()}] - Invalid account number`);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid account number!',
+                          })
                     }
-                })
+                    else if (error.response.status === 402) {
+                      console.info(`[${new Date()}] - Insuficient funds`);
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Insuficient funds!',
+                        })
+                    }
+                    else if (error.response.status === 403) {
+                      console.info(`[${new Date()}] - Transfer not possible due to recipient account restrictions`);
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Transfer not possible due to recipient account restrictions!',
+                          text: ' Try sending a smaller amount or contact with the recipient.',
+                        })
+                    }
+                    else{
+                      console.error(`[${new Date()}] - ${error}`);
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: error,
+                        })
+                    } 
+                  });
+              }
+          })
         }
       }
     }

@@ -13,7 +13,7 @@ import {FcMoneyTransfer} from 'react-icons/fc'
 function Details() {
     const location = useLocation();
     let data = location.state
-    console.log(data);
+    console.debug(`[${new Date()}] - ${data}`);
     return(
         <>
             <div className='navbar'>
@@ -28,7 +28,7 @@ function Details() {
                         <hr/>
                         <p style={{color: 'grey', fontSize:'0.7rem'}}>{data?.descr}</p>
                         <p style={{color: 'grey', fontSize:'0.7rem'}}>{data?.bank}</p>
-                        <p style={{color: 'grey', fontSize:'0.7rem'}}> {data?.account}</p>
+                        {/* <p style={{color: 'grey', fontSize:'0.7rem'}}> {data?.account}</p> */}
 
                         <div className='div'>
                             <p style={{color: 'grey'}}> 
