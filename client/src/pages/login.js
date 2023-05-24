@@ -12,9 +12,11 @@ function Login({navigation}) {
     const [name, setName] = useState("");
     const [passw, setPassw] = useState("");
 
+    // Function that validates the login credentials
     const checkLogin = (event) =>{
         event.preventDefault();
         if(!name || !passw){
+            console.info(`[${new Date()}] - An input was left blank`);
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -24,6 +26,7 @@ function Login({navigation}) {
         else {
             const regex = /[^a-z0-9]/i;
             if(name.match(regex)){
+                console.info(`[${new Date()}] - Userame with invalid characters`);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -32,6 +35,7 @@ function Login({navigation}) {
                 return;
             }
             if(passw.length < 5){
+                console.info(`[${new Date()}] - Password shorter than required`);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -43,11 +47,13 @@ function Login({navigation}) {
             const postData = {username: name, password: passw};
             axios.post('http://localhost:5000/api/client/login', postData)
             .then(response => {
+                console.info(`[${new Date()}] - Successful login`);
                 localStorage.setItem('accountNumber', response.data);
                 navigate('/dashboard');
             })
             .catch(error => {
                 if (error.response.status === 401) {
+                    console.info(`[${new Date()}] - Wrong credentials`);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -55,18 +61,18 @@ function Login({navigation}) {
                       })
                 }
                 else{
+                    console.error(`[${new Date()}] - ${error}`);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Something went wrong!',
                       })
-                    console.error(error);
-
                 } 
             });
 
         }
     }
+
     const nameChange = (event) => {
         setName(event.target.value);
     }

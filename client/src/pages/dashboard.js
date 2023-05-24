@@ -24,59 +24,61 @@ function Dashboard() {
     const [currentTransactions, setTransactions] = useState([]);
     const clientAccountNumber = localStorage.getItem('accountNumber');
     
-
+    // Function that obtains the client info
     const getClientInfo = () => { 
         const postData = {account_number:clientAccountNumber};
         axios.post('http://localhost:5000/api/client', postData)
         .then(response => {
-          const clientJSON = JSON.stringify(response.data[0]);
-          const info = JSON.parse(clientJSON);
-          //console.log("Informacion"+info)
-          localStorage.setItem('clientInfo', info);
-          //setClientAccount(info.account_number);
-          setCardData({
-            number: info.account_number,
-            name: info.name +" "+info.lastname,
-            expiry:'',
-            cvc: '',
-            focus:''
-          });
+            console.info(`[${new Date()}] - Data successfully obtained`);
+            const clientJSON = JSON.stringify(response.data[0]);
+            const info = JSON.parse(clientJSON);
+            console.debug(`[${new Date()}] - ${info}`);
+            localStorage.setItem('clientInfo', info);
+            console.debug(`[${new Date()}] - ${info.account_number}`);
+            setCardData({
+                number: info.account_number,
+                name: info.name +" "+info.lastname,
+                expiry:'',
+                cvc: '',
+                focus:''
+            });
 
-          setCurrentMoney(info.account_balance);
-
+            setCurrentMoney(info.account_balance);
         })
         .catch(error => {
-          Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: error,
-            })
-          console.error(error);
+            console.error(`[${new Date()}] - ${error}`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error,
+                })
         });
       };
 
+    // Function that obtains all the transactions made by the loged client
     const getTransactions = () => {
         const postData = {client_account:clientAccountNumber};
         axios.post('http://localhost:5000/api/transactions', postData)
         .then(response => {
-          const transactionsJSON = JSON.stringify(response.data);
-          const info = JSON.parse(transactionsJSON);
-          console.log("Transacciones"+transactionsJSON);
-          setTransactions(info);
+            const transactionsJSON = JSON.stringify(response.data);
+            const info = JSON.parse(transactionsJSON);
+            console.debug(`[${new Date()}] - ${transactionsJSON}`);
+            setTransactions(info);
         })
         .catch(error => {
-          Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: error,
-            })
-          console.error(error);
+            console.error(`[${new Date()}] - ${error}`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error,
+                })
         });
     };
 
+    // Function that gives a format to the date
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: "2-digit", minute: "2-digit"};
         return date.toLocaleDateString(undefined, options);
     }
 
@@ -113,7 +115,6 @@ function Dashboard() {
                 <div className='centered transactions'>
                         <div className='sticky_'><h1 style={{color:'#104B84'}}>Transactions</h1></div>
                         <div className=" container_">
-
                             {
                                 setTransactions.length && 
                                 currentTransactions.map((transaction,index) => {
@@ -126,7 +127,7 @@ function Dashboard() {
                             
                         </div>
                         &nbsp;
-                        <button style={{ marginTop: '2.5rem' }}  onClick={handleClick}>Hacer Transferencia</button>
+                        <button className='button' style={{ marginTop: '2.5rem' }}  onClick={handleClick}>Make new transfer</button>
                 </div>
                 
             </div>
