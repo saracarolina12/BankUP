@@ -1,5 +1,6 @@
 import './login.css';
 import loginImg from '../assets/imgs/login.webp'
+import transaction from '../assets/imgs/transaction.png'
 import React, {useState} from 'react'
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -84,17 +85,20 @@ function Login({navigation}) {
             
             <div className="split right">
                 <div className="centered">
-                    {/* <img src="img_avatar.png" alt="Avatar man"> */}
-                    <p>Nice to see you again</p>
-                    <h2 style={{color:'purple'}}>Welcome back</h2>
+                    <img src={transaction} alt="Transaction logo" style={{width:'30%'}}/>
+                    <h1 className='title1'>Bank <span className='title2'>UP</span></h1>
                     <form onSubmit={checkLogin}>
                         <label>
-                            <input type="text" name="name" placeholder='Username' onChange={nameChange}/>
+                            <input className='input' type="text" name="name" placeholder='Username' onChange={nameChange}/>
                         </label>
+                        <br></br>
+                        <br></br>
                         <label>
-                            <input type="password" name="passw" placeholder='Password' onChange={passwChange}/>
+                            <input className='input' type="password" name="passw" placeholder='Password' onChange={passwChange}/>
                         </label>
-                        <input type="submit" value="Login" />
+                        <br></br>
+                        <br></br>
+                        <input className='button' type="submit" value="LOGIN" />
                     </form>
                 </div>
             </div>
