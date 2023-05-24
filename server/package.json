@@ -5,7 +5,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles", 
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
     "dev": "nodemon node src/server.js"
   },
   "keywords": [],
@@ -21,7 +21,7 @@
     "nodemon": "^2.0.22",
     "supertest": "^6.3.3"
   },
-  "comments":{
+  "comments": {
     "jest": "error modules solucionado con esto ---> https://stackoverflow.com/questions/60372790/node-v13-jest-es6-native-support-for-modules-without-babel-or-esm"
   }
 }
