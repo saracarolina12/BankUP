@@ -1,6 +1,6 @@
 import './login.css';
 import loginImg from '../assets/imgs/login.webp'
-import transaction from '../assets/imgs/transaction.png'
+import transaction from '../assets/imgs/transactionLogo.jpg'
 import React, {useState} from 'react'
 import axios from 'axios';
 import Swal from 'sweetalert2';
