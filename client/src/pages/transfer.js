@@ -14,7 +14,7 @@ function TransferScreen() {
   const getClientInfo = (event) => {
     const clientAccountNumber = localStorage.getItem('accountNumber');
     const postData = {account_number:clientAccountNumber};
-    axios.post('http://localhost:5000/api/client', postData)
+    axios.post('https://bankup.onrender.com/api/client', postData)
     .then(response => {
       const clientJSON = JSON.stringify(response.data[0]);
       const info = JSON.parse(clientJSON);
@@ -82,7 +82,7 @@ function TransferScreen() {
               confirmButtonText: 'Yes'
           }).then((result) => {
               if (result.isConfirmed) {
-                  axios.post('http://localhost:5000/api/transfer', postData)
+                  axios.post('https://bankup.onrender.com/api/transfer', postData)
                   .then(response => {
                     console.info(`[${new Date()}] - Successful transfer`);
                     Swal.fire({

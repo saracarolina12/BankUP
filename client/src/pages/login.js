@@ -45,7 +45,7 @@ function Login({navigation}) {
             }
 
             const postData = {username: name, password: passw};
-            axios.post('http://localhost:5000/api/client/login', postData)
+            axios.post('https://bankup.onrender.com/api/client/login', postData)
             .then(response => {
                 console.info(`[${new Date()}] - Successful login`);
                 localStorage.setItem('accountNumber', response.data);

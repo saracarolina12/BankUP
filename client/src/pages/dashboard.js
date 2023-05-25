@@ -27,7 +27,7 @@ function Dashboard() {
     // Function that obtains the client info
     const getClientInfo = () => { 
         const postData = {account_number:clientAccountNumber};
-        axios.post('http://localhost:5000/api/client', postData)
+        axios.post('https://bankup.onrender.com/api/client', postData)
         .then(response => {
             console.info(`[${new Date()}] - Data successfully obtained`);
             const clientJSON = JSON.stringify(response.data[0]);
@@ -58,7 +58,7 @@ function Dashboard() {
     // Function that obtains all the transactions made by the loged client
     const getTransactions = () => {
         const postData = {client_account:clientAccountNumber};
-        axios.post('http://localhost:5000/api/transactions', postData)
+        axios.post('https://bankup.onrender.com/api/transactions', postData)
         .then(response => {
             const transactionsJSON = JSON.stringify(response.data);
             const info = JSON.parse(transactionsJSON);
